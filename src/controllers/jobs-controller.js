@@ -161,9 +161,12 @@ module.exports = {
       let url = getUrl('getAnnons', { annonsid: add.annonsid });
       let localAd = await http.get(url);
       let locations = await location.getLocation(
-        localAd.platsannons.arbetsplats.besoksadress +
-          ' ' +
+        [
+          localAd.platsannons.arbetsplats.postadress,
+          localAd.platsannons.arbetsplats.postnummer,
+          localAd.platsannons.arbetsplats.postort,
           localAd.platsannons.arbetsplats.land,
+        ].join(' '),
       );
       resp.ads.push({
         ...localAd.platsannons,

@@ -1,11 +1,10 @@
 const driver = require('bigchaindb-driver');
-
-const conf = {
-  API_PATH: 'https://test.bigchaindb.com/api/v1/',
-};
-
+const connection = new driver.Connection(process.env.BIGCHAIN_API_PATH, {
+  app_id: process.env.BIGCHAIN_API_ID,
+  app_key: process.env.BIGCHAIN_API_KEY,
+});
 module.exports = {
-  get: async url => {
+  create: async url => {
     var resp = await axios.get(url, {
       headers: {
         'Accept-Language': 'sv',
