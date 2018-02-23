@@ -5,8 +5,10 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
+    "bigchaindb-driver": "^3.2.0",
     "csv": "^2.0.0",
     "dotenv": "^5.0.0",
+    "ed25519": "^0.0.4",
     "express": "^4.16.2"
   },
   "devDependencies": {
