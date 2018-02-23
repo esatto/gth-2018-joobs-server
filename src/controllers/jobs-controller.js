@@ -39,13 +39,13 @@ var conf = {
     getAnnons: {
       url: '/platsannonser/{annonsid}',
       attribute: {
-        annonsid: 'annonsid',
+        annonsid: 'id',
       },
     },
     getAnnonsLogo: {
       url: '/platsannonser/{annonsid}/logotyp',
       attribute: {
-        annonsid: 'annonsid',
+        annonsid: 'id',
       },
     },
   },
@@ -90,36 +90,75 @@ module.exports = {
     res.send(data);
   },
   getAllYrkesomraden: async (req, res) => {
-    var data = await http.get(getUrl('getAllYrkesomraden'));
+    var url = getUrl('getAllYrkesomraden', { yrkesnamn: req.query.name });
+    var data = await http.get(url);
+    res.send(data);
+  },
+  // getKommun: async (req, res) => {
+  //   const { countyId } = req.query;
+
+  //   if (!countyId) {
+  //     return res.status(400).send('Missing mandatory parameter');
+  //   }
+  //   console.log({ countyId, params: toParams({ countyId }) });
+  //   var data = await http.get(getUrl('getKommun'), toParams({ countyId }));
+  //   res.send(data);
+  // },
+  // getYrkesgrupp: async (req, res) => {
+  //   const { workAreaId } = req.query;
+  //   if (!workAreaId) {
+  //     return res.status(400).send('Missing mandatory parameter');
+  //   }
+  //   var data = await http.get(
+  //     getUrl('getYrkesgrupp'),
+  //     toParams({ workAreaId }),
+  //   );
+  //   res.send(data);
+  // },
+  // getYrke: async (req, res) => {
+  //   var data = await http.get(getUrl('getYrke'));
+  //   res.send(data);
+  // },
+  getAnnons: async (req, res) => {
+    const { annonsid } = req.query;
+    var url = getUrl('getAnnons', { annonsid });
+    var data = await http.get(url);
+    res.send(data);
+  },
+  getAnnonsLogo: async (req, res) => {
+    const { annonsid } = req.query;
+    var url = getUrl('getAnnonsLogo', { annonsid });
+    var data = await http.get(url);
     res.send(data);
   },
   searchAds: async (req, res) => {
     const { query } = req;
+
     if (
       !query.countyId &&
       !query.municipalyId &&
       !query.workId &&
       !query.keyword
     ) {
-      res.status(400).send('Missing atleast one mandatory parameter');
-    } else {
-      const { matchningslista } = await http.get(
-        getUrl('searchAds'),
-        toParams(query, 'searchAds'),
-      );
-
-      var resp = {
-        totalAds: matchningslista.antal_platsannonser,
-        numPages: matchningslista.antal_sidor,
-        ads: [],
-      };
-
-      for (add of matchningslista.matchningdata) {
-        let url = getUrl('getAnnons', { annonsid: add.annonsid });
-        let localAd = await http.get(url);
-        resp.ads.push(localAd.platsannons);
-      }
-      res.send(resp);
+      return res.status(400).send('Missing atleast one mandatory parameter');
     }
+
+    const { matchningslista } = await http.get(
+      getUrl('searchAds'),
+      toParams(query, 'searchAds'),
+    );
+
+    var resp = {
+      totalAds: matchningslista.antal_platsannonser,
+      numPages: matchningslista.antal_sidor,
+      ads: [],
+    };
+
+    for (add of matchningslista.matchningdata) {
+      let url = getUrl('getAnnons', { annonsid: add.annonsid });
+      let localAd = await http.get(url);
+      resp.ads.push(localAd.platsannons);
+    }
+    res.send(resp);
   },
 };

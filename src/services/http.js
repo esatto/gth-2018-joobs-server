@@ -1,14 +1,20 @@
 var axios = require('axios');
 
+var cache = {};
+
 module.exports = {
   get: async (url, params) => {
-    console.log(params);
+    var cacheKey = url + ':' + JSON.stringify(params);
+    if (cache[cacheKey]) {
+      return cache[cacheKey];
+    }
     var resp = await axios.get(url, {
-      params: params,
+      params,
       headers: {
         'Accept-Language': 'sv',
       },
     });
+    cache[cacheKey] = resp.data;
     return resp.data;
   },
 };
