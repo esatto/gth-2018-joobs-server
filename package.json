@@ -4,6 +4,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "axios": "^0.18.0",
     "bigchaindb-driver": "^3.2.0",
     "csv": "^2.0.0",

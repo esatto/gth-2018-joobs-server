@@ -1,4 +1,5 @@
 var http = require('../services/http');
+var location = require('../services/directions');
 
 var conf = {
   baseurl: 'http://api.arbetsformedlingen.se/af/v0',
@@ -158,9 +159,19 @@ module.exports = {
 
     for (add of matchningslista.matchningdata) {
       let url = getUrl('getAnnons', { annonsid: add.annonsid });
-      let logoUrl = getUrl('getAnnonsLogo', { annonsid: add.annonsid });
       let localAd = await http.get(url);
-      resp.ads.push({ ...localAd.platsannons, logoUrl });
+      let locations = await location.getLocation(
+        localAd.platsannons.arbetsplats.besoksadress +
+          ' ' +
+          localAd.platsannons.arbetsplats.land,
+      );
+      resp.ads.push({
+        ...localAd.platsannons,
+        adLocation:
+          locations && locations.length > 0
+            ? locations[0].geometry.location
+            : {},
+      });
     }
     res.send(resp);
   },
