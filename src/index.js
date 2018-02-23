@@ -12,9 +12,10 @@ const router = express.Router();
 
 router.get('/', home.index);
 router.get('/jobs/', jobs.index);
-router.get('/jobs/allLan', jobs.getAllLan);
-router.get('/jobs/allLanExtended', jobs.getAllLanExtended);
-router.get('/jobs/allYrkesomraden', jobs.getAllYrkesomraden);
+router.get('/jobs/getAllLan', jobs.getAllLan);
+router.get('/jobs/getAllLanExtended', jobs.getAllLanExtended);
+router.get('/jobs/getAllYrkesomraden', jobs.getAllYrkesomraden);
+router.get('/jobs/searchAds', jobs.searchAds);
 
 app.use('/api', router);
 
