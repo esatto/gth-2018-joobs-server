@@ -94,31 +94,33 @@ module.exports = {
     var data = await http.get(url);
     res.send(data);
   },
-  // getKommun: async (req, res) => {
-  //   const { countyId } = req.query;
+  getKommun: async (req, res) => {
+    const { countyId } = req.query;
 
-  //   if (!countyId) {
-  //     return res.status(400).send('Missing mandatory parameter');
-  //   }
-  //   console.log({ countyId, params: toParams({ countyId }) });
-  //   var data = await http.get(getUrl('getKommun'), toParams({ countyId }));
-  //   res.send(data);
-  // },
-  // getYrkesgrupp: async (req, res) => {
-  //   const { workAreaId } = req.query;
-  //   if (!workAreaId) {
-  //     return res.status(400).send('Missing mandatory parameter');
-  //   }
-  //   var data = await http.get(
-  //     getUrl('getYrkesgrupp'),
-  //     toParams({ workAreaId }),
-  //   );
-  //   res.send(data);
-  // },
-  // getYrke: async (req, res) => {
-  //   var data = await http.get(getUrl('getYrke'));
-  //   res.send(data);
-  // },
+    if (!countyId) {
+      return res.status(400).send('Missing mandatory parameter');
+    }
+    var data = await http.get(
+      getUrl('getKommun'),
+      toParams({ countyId }, 'getKommun'),
+    );
+    res.send(data);
+  },
+  getYrkesgrupp: async (req, res) => {
+    const { workAreaId } = req.query;
+    if (!workAreaId) {
+      return res.status(400).send('Missing mandatory parameter');
+    }
+    var data = await http.get(
+      getUrl('getYrkesgrupp'),
+      toParams({ workAreaId }, 'getYrkesgrupp'),
+    );
+    res.send(data);
+  },
+  getYrke: async (req, res) => {
+    var data = await http.get(getUrl('getYrke'));
+    res.send(data);
+  },
   getAnnons: async (req, res) => {
     const { annonsid } = req.query;
     var url = getUrl('getAnnons', { annonsid });
@@ -156,8 +158,9 @@ module.exports = {
 
     for (add of matchningslista.matchningdata) {
       let url = getUrl('getAnnons', { annonsid: add.annonsid });
+      let logoUrl = getUrl('getAnnonsLogo', { annonsid: add.annonsid });
       let localAd = await http.get(url);
-      resp.ads.push(localAd.platsannons);
+      resp.ads.push({ ...localAd.platsannons, logoUrl });
     }
     res.send(resp);
   },
