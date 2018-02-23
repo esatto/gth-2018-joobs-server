@@ -7,7 +7,11 @@ const home = require('./controllers/home-controller');
 
 const app = express();
 
-app.get('/', home.index);
+const router = express.Router();
+
+router.get('/', home.index);
+
+app.use('/api', router);
 
 app.listen(config.port, err => {
   if (err) console.error(err);
